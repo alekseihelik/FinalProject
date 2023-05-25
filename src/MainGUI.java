@@ -74,5 +74,4 @@ public class MainGUI extends JFrame {
         settings.setFont(new Font("Monospaced", Font.PLAIN, 50));
         return settings;
     }
-
 }
