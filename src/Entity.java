@@ -6,6 +6,7 @@ public class Entity {
     private int score;
     private int bullets;
 
+
     public Entity(){
         health = 1;
         score = 1;

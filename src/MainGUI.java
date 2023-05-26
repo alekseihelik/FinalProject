@@ -49,6 +49,7 @@ public class MainGUI extends JFrame {
         backgroundPanel.add(settingsButton(), BorderLayout.SOUTH);
         setVisible(true);
         revalidate();
+
     }
 
     private JButton startButton(){
