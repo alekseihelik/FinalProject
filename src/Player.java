@@ -10,8 +10,8 @@ public class Player implements KeyListener {
     public Player() {
         score = 0;
         time = 0;
-        x = 0;
-        y = 0;
+        x = 450;
+        y = 600;
     }
 
     public int getScore() {
@@ -32,18 +32,22 @@ public class Player implements KeyListener {
 
     public void moveUp() {
         y--;
+        System.out.println("W pressed");
     }
 
     public void moveDown() {
         y++;
+        System.out.println("S pressed");
     }
 
     public void moveLeft() {
         x--;
+        System.out.println("A pressed");
     }
 
     public void moveRight() {
         x++;
+        System.out.println("D pressed");
     }
 
     @Override

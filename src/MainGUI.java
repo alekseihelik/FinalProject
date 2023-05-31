@@ -29,7 +29,7 @@ public class MainGUI extends JFrame {
         setLocation(x, y);
         setTitle("Shooting Game");
         try {
-            URL iconUrl = new URL("https://t3.ftcdn.net/jpg/03/56/25/78/360_F_356257839_bt05Ezt9V60WnC6cSAwQqL5UJmERjJ9A.jpg"); // Replace with the actual URL of the icon image
+            URL iconUrl = new URL("https://t3.ftcdn.net/jpg/03/56/25/78/360_F_356257839_bt05Ezt9V60WnC6cSAwQqL5UJmERjJ9A.jpg");
             BufferedImage iconImage = ImageIO.read(iconUrl);
             setIconImage(iconImage);
         } catch (IOException e) {
@@ -37,7 +37,7 @@ public class MainGUI extends JFrame {
         }
         setLayout(new BorderLayout());
         try {
-            URL imageUrl = new URL("https://img.itch.zone/aW1nLzkzMzY1NjMucG5n/315x250%23c/Gb%2BH2t.png"); // Replace with the actual image URL
+            URL imageUrl = new URL("https://img.itch.zone/aW1nLzkzMzY1NjMucG5n/315x250%23c/Gb%2BH2t.png");
             backgroundImage = ImageIO.read(imageUrl);
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,10 +60,9 @@ public class MainGUI extends JFrame {
                     g2d.drawString("Start Game", x, y);
                 } else {
                     if (player != null) {
-                        int playerX = player.getX();
-                        int playerY = player.getY();
                         BufferedImage playerImage = getPlayerImage();
-                        g.drawImage(playerImage, playerX, playerY, null);
+                        g.drawImage(playerImage, player.getX(), player.getY(), null);
+                        revalidate();
                     }
                 }
             }
@@ -96,8 +95,7 @@ public class MainGUI extends JFrame {
 
     private BufferedImage getPlayerImage() {
         try {
-            BufferedImage playerImage = ImageIO.read(new File("sprites/Placeholder.png"));
-            return playerImage;
+            return ImageIO.read(new File("sprites/Placeholder.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
