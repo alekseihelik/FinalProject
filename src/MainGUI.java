@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -58,11 +59,10 @@ public class MainGUI extends JFrame {
                     g2d.setColor(Color.RED);
                     g2d.drawString("Start Game", x, y);
                 } else {
-                    // Draw player sprite
                     if (player != null) {
                         int playerX = player.getX();
                         int playerY = player.getY();
-                        BufferedImage playerImage = getPlayerImage(); // Method to get the player sprite image
+                        BufferedImage playerImage = getPlayerImage();
                         g.drawImage(playerImage, playerX, playerY, null);
                     }
                 }
@@ -96,14 +96,8 @@ public class MainGUI extends JFrame {
 
     private BufferedImage getPlayerImage() {
         try {
-            // Replace "player_sprite.png" with the actual filename of your player sprite image
-            URL playerImageUrl = getClass().getResource("Placeholder.png");
-            if (playerImageUrl != null) {
-                BufferedImage playerImage = ImageIO.read(playerImageUrl);
-                return playerImage;
-            } else {
-                System.out.println("Player sprite image not found.");
-            }
+            BufferedImage playerImage = ImageIO.read(new File("sprites/Placeholder.png"));
+            return playerImage;
         } catch (IOException e) {
             e.printStackTrace();
         }
