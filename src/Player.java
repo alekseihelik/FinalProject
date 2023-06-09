@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Player implements KeyListener {
     private Rectangle hitbox;
@@ -21,17 +23,26 @@ public class Player implements KeyListener {
     private boolean isMovingLeft;
     private boolean isMovingRight;
     private boolean isShooting;
-    private BufferedImage playerImage;
+    private BufferedImage playerImage1;
+    private BufferedImage playerImage2;
+    private BufferedImage currentImage;
 
     private long bulletCooldown;
     private final long bulletCooldownTime = 130;
 
     public Player(GamePanel panel) throws IOException {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        playerImage = ImageIO.read(new File("sprites/Placeholder.png"));
-        hitbox = new Rectangle(x,y,playerImage.getWidth(),playerImage.getHeight());
+        BufferedImage originalImage1 = ImageIO.read(new File("sprites/Player1.png"));
+        BufferedImage originalImage2 = ImageIO.read(new File("sprites/Player2.png"));
+        int scaledWidth = originalImage1.getWidth() / 3;  // Adjust the width as desired
+        int scaledHeight = originalImage1.getHeight() / 3;  // Adjust the height as desired
+
+        playerImage1 = resizeImage(originalImage1, scaledWidth, scaledHeight);
+        playerImage2 = resizeImage(originalImage2, scaledWidth, scaledHeight);
+        currentImage = playerImage1;
+        hitbox = new Rectangle(x, y, currentImage.getWidth(), currentImage.getHeight());
         score = 0;
-        x = (int)(screenSize.getHeight()-180)/2;
+        x = (int) (screenSize.getHeight() - 180) / 2;
         y = 600;
         alive = true;
         lives = 3;
@@ -40,10 +51,23 @@ public class Player implements KeyListener {
         isMovingDown = false;
         isMovingLeft = false;
         isMovingRight = false;
+
+        // Start a timer to swap the player sprites
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (currentImage == playerImage1) {
+                    currentImage = playerImage2;
+                } else {
+                    currentImage = playerImage1;
+                }
+            }
+        }, 0, 100);
     }
 
-    public BufferedImage getPlayerImage(){
-        return playerImage;
+    public BufferedImage getPlayerImage() {
+        return currentImage;
     }
     public int getLives() {
         return lives;
@@ -86,7 +110,7 @@ public class Player implements KeyListener {
             try {
                 if (new Date().getTime() > bulletCooldown) {
                     bulletCooldown = new Date().getTime() + bulletCooldownTime;
-                    Bullet bullet = new Bullet(x + playerImage.getWidth()/2 - Bullet.width/2, y - Bullet.height - Bullet.distanceToPlayer+50);
+                    Bullet bullet = new Bullet(x + playerImage1.getWidth()/2 - Bullet.width/2, y - Bullet.height - Bullet.distanceToPlayer+50);
                     GamePanel.bullets.add(bullet);
                 }
             } catch (IOException e) {}
@@ -180,5 +204,13 @@ public class Player implements KeyListener {
         if (lives <= 0) {
             alive = false;
         }
+    }
+
+    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+        BufferedImage resizedImage = new BufferedImage(width, height, originalImage.getType());
+        Graphics2D g2d = resizedImage.createGraphics();
+        g2d.drawImage(originalImage, 0, 0, width, height, null);
+        g2d.dispose();
+        return resizedImage;
     }
 }
