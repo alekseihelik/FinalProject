@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 public class Player implements KeyListener {
     private Rectangle hitbox;
@@ -14,27 +15,31 @@ public class Player implements KeyListener {
     private int score;
     private int x;
     private int y;
-    private MainGUI mainGUI;
+    private GamePanel gamePanel;
     private boolean isMovingUp;
     private boolean isMovingDown;
     private boolean isMovingLeft;
     private boolean isMovingRight;
+    private boolean isShooting;
     private BufferedImage playerImage;
 
-    public Player(MainGUI mainGUI) throws IOException {
+    private long bulletCooldown;
+    private final long bulletCooldownTime = 130;
+
+    public Player(GamePanel panel) throws IOException {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         playerImage = ImageIO.read(new File("sprites/Placeholder.png"));
         hitbox = new Rectangle(x,y,playerImage.getWidth(),playerImage.getHeight());
         score = 0;
-        x = 450;
+        x = (int)(screenSize.getHeight()-180)/2;
         y = 600;
         alive = true;
         lives = 3;
-        this.mainGUI = mainGUI;
+        this.gamePanel = panel;
         isMovingUp = false;
         isMovingDown = false;
         isMovingLeft = false;
         isMovingRight = false;
-        startGameLoop();
     }
 
     public BufferedImage getPlayerImage(){
@@ -76,6 +81,19 @@ public class Player implements KeyListener {
         x += 100;
     }
 
+    public void shootBullet() {
+        if (alive) {
+            try {
+                if (new Date().getTime() > bulletCooldown) {
+                    bulletCooldown = new Date().getTime() + bulletCooldownTime;
+                    Bullet bullet = new Bullet(x + playerImage.getWidth()/2 - Bullet.width/2, y - Bullet.height - Bullet.distanceToPlayer+50);
+                    GamePanel.bullets.add(bullet);
+                }
+            } catch (IOException e) {}
+
+        }
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -91,6 +109,8 @@ public class Player implements KeyListener {
             isMovingLeft = true;
         } else if (key == KeyEvent.VK_D) {
             isMovingRight = true;
+        } else if (key == KeyEvent.VK_SPACE) {
+            isShooting = true;
         }
     }
 
@@ -105,36 +125,17 @@ public class Player implements KeyListener {
             isMovingLeft = false;
         } else if (key == KeyEvent.VK_D) {
             isMovingRight = false;
+        } else if (key == KeyEvent.VK_SPACE) {
+            isShooting = false;
         }
     }
 
-    private void startGameLoop() {
-        Thread gameLoop = new Thread(() -> {
-            long desiredFrameRate = 60; // Adjust the desired frame rate here
-            long frameTime = 1000 / desiredFrameRate;
-            long lastUpdateTime = System.currentTimeMillis();
+    public void draw(Graphics2D g2d) {
+        g2d.drawImage(getPlayerImage(), this.getX(), this.getY(), null);
 
-            while (true) {
-                long currentTime = System.currentTimeMillis();
-                long elapsedTime = currentTime - lastUpdateTime;
-
-                if (elapsedTime >= frameTime) {
-                    update();
-                    lastUpdateTime = currentTime;
-                }
-
-                try {
-                    Thread.sleep(1); // Small delay to avoid excessive CPU usage
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        gameLoop.start();
     }
 
-    private void update() {
+    public void update() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int dx = 0;
         int dy = 0;
@@ -166,10 +167,13 @@ public class Player implements KeyListener {
             dy /= Math.sqrt(2);
         }
 
+        if (isShooting) {
+            shootBullet();
+        }
+
         x += dx;
         y += dy;
 
-        mainGUI.repaint();
     }
 
     public void death() {

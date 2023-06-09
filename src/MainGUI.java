@@ -11,21 +11,15 @@ public class MainGUI extends JFrame {
     private Player player;
 
     public MainGUI() throws IOException {
-        player = new Player(this);
         setScreenSize();
         gameIcon();
         setTitle("Bullet Hell");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel backgroundPanel = new JPanel() {
-            public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                BufferedImage playerImage = player.getPlayerImage();
-                g.drawImage(playerImage, player.getX(), player.getY(), null);
-            }
-        };
+        GamePanel backgroundPanel = new GamePanel();
         setContentPane(backgroundPanel);
         setVisible(true);
-        addKeyListener(player);
+        
+        backgroundPanel.startGameLoop();
     }
 
     private void gameIcon() {
