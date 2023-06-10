@@ -183,7 +183,6 @@ public class Player implements KeyListener {
         }
 
         if (dx != 0 && dy != 0) {
-            // Diagonal movement
             dx /= Math.sqrt(2);
             dy /= Math.sqrt(2);
         }

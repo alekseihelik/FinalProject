@@ -1,14 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 public class MainGUI extends JFrame {
     private Player player;
+    private Timer timer;
 
     public MainGUI() throws IOException {
         setScreenSize();
@@ -19,6 +20,8 @@ public class MainGUI extends JFrame {
         setContentPane(backgroundPanel);
         setVisible(true);
         backgroundPanel.startGameLoop();
+        timer = new Timer(1000, new TimerListener());
+        timer.start();
     }
 
     private void gameIcon() {
@@ -37,5 +40,13 @@ public class MainGUI extends JFrame {
         int screenHeight = screenSize.height;
         setSize(screenHeight - 100, screenHeight - 50);
         setLocation((screenWidth - (screenHeight - 100)) / 2, ((screenHeight - (screenHeight - 100)) / 2) - 50);
+    }
+
+    private static class TimerListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // This method will be called every second
+            // You can perform any actions or updates here
+        }
     }
 }

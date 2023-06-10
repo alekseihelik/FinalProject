@@ -38,13 +38,13 @@ public class GamePanel extends JPanel {
 					this.repaint();
 				}
 
-				backgroundY += 1; // Adjust the scrolling speed as desired
+				backgroundY += 1;
 				if (backgroundY >= getHeight()) {
 					backgroundY = 0;
 				}
 
 				try {
-					Thread.sleep(1); // Small delay to avoid excessive CPU usage
+					Thread.sleep(1);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
