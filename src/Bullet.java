@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 public class Bullet {
     private int x;
     private int y;
-    double rotationRequired = Math.toRadians (45);
     public static final int width = 20;
     public static final int height = 60;
     public static final int distanceToPlayer = 10;

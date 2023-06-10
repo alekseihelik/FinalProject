@@ -62,7 +62,12 @@ public class GamePanel extends JPanel {
 		player.update();
 		for (int i = 0; i < bullets.size(); i++) {
 			bullets.get(i).update();
-			bullets.get(i).draw(g2d);
+			if(bullets.get(i).isAlive()){
+				bullets.get(i).draw(g2d);
+			}
+			else{
+				bullets.remove(i);
+			}
 		}
 		player.draw(g2d);
 	}

@@ -34,9 +34,8 @@ public class Player implements KeyListener {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         BufferedImage originalImage1 = ImageIO.read(new File("sprites/Player1.png"));
         BufferedImage originalImage2 = ImageIO.read(new File("sprites/Player2.png"));
-        int scaledWidth = originalImage1.getWidth() / 3;  // Adjust the width as desired
-        int scaledHeight = originalImage1.getHeight() / 3;  // Adjust the height as desired
-
+        int scaledWidth = originalImage1.getWidth() / 3;
+        int scaledHeight = originalImage1.getHeight() / 3;
         playerImage1 = resizeImage(originalImage1, scaledWidth, scaledHeight);
         playerImage2 = resizeImage(originalImage2, scaledWidth, scaledHeight);
         currentImage = playerImage1;
@@ -51,8 +50,6 @@ public class Player implements KeyListener {
         isMovingDown = false;
         isMovingLeft = false;
         isMovingRight = false;
-
-        // Start a timer to swap the player sprites
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override

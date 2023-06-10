@@ -18,7 +18,6 @@ public class MainGUI extends JFrame {
         GamePanel backgroundPanel = new GamePanel();
         setContentPane(backgroundPanel);
         setVisible(true);
-        
         backgroundPanel.startGameLoop();
     }
 
