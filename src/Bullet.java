@@ -49,6 +49,7 @@ public class Bullet {
     public void update() {
     	if (alive) {
 	        y -= 10;
+            hitbox = new Rectangle(x,y,bulletImage.getWidth(),bulletImage.getHeight());
 	        if (y <= -height) {
 	            alive = false;
 	        }
@@ -71,4 +72,11 @@ public class Bullet {
         return rotated;
     }
 
+    public Rectangle getHitbox() {
+        return hitbox;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 }

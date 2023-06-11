@@ -30,19 +30,27 @@ public class Enemy {
     
     public void update() {
     	if (isAlive()) {
+            hitbox = new Rectangle(x,y,image.getWidth(),image.getHeight());
     		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     		if (path == 0) {
-    			x += 1;
-    			y += 2;
+    			x += 4;
+    			y += 4;
     		}
-    		if (x >= gp.screenWidth  || x <= image.getWidth()) {
+            else if(path == 1){
+                x-=4;
+                y+=4;
+            }
+            else if(path == 2){
+                y += 8;
+            }
+    		if (x >= gp.screenWidth + 150 || x <= image.getWidth()-200 || y>= screenSize.height+100 || !(isAlive())) {
     			alive = false;
     		}
     	}
     }
 
     public boolean isAlive() {
-        if(shot){
+        if(isShot()){
             alive = false;
         }
         return alive;
@@ -80,4 +88,7 @@ public class Enemy {
         return resizedImage;
     }
 
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 }

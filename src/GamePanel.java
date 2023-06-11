@@ -1,8 +1,4 @@
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,21 +12,18 @@ public class GamePanel extends JPanel {
 	public static ArrayList<Enemy> enemies = new ArrayList<>();
 	private Image backgroundImage;
 	private int backgroundY;
-	
-	public static int currentPath;
-	
 	private long lastEnemySpawnedTime;
 	private final long enemySpawnDelay = 500;
 	
 	private int wave = 1;
-	private final long waveDelay = 3000;
+	private final long waveDelay = 500;
 	private long waveSpawnTime;
 	
-	private final int enemiesPerWave = 10;
+	private int enemiesPerWave = 10;
 	private int enemyToSpawn = enemiesPerWave;
 
-	private int diagonalPathSpawnX;
 	public static int screenWidth;
+	private int currentBullet;
 	
 	public GamePanel(int width) throws IOException {
 		player = new Player(this);
@@ -39,7 +32,6 @@ public class GamePanel extends JPanel {
 		backgroundY = 0;
 		backgroundImage = ImageIO.read(new File("backgrounds/top-down placeholder.jpg"));
 		this.screenWidth = width;
-		diagonalPathSpawnX = width - 100;
 	}
 
 	public void startGameLoop() {
@@ -77,12 +69,19 @@ public class GamePanel extends JPanel {
 		if (enemyToSpawn > 0 && System.currentTimeMillis() >= waveSpawnTime && System.currentTimeMillis() >= lastEnemySpawnedTime + enemySpawnDelay) {
 			lastEnemySpawnedTime = System.currentTimeMillis();
 			enemyToSpawn--;
-			if (currentPath == 0) {
-				diagonalPathSpawnX -= 100;
-			}
 			try {
-				Enemy spawnedEnemy = new Enemy(currentPath, diagonalPathSpawnX, this);
-				enemies.add(spawnedEnemy);
+				if(wave == 1 || wave == 4 || wave == 7) {
+					Enemy spawnedEnemy = new Enemy(0, 0, this);
+					enemies.add(spawnedEnemy);
+				}
+				if(wave == 2 || wave == 5 || wave == 8){
+					Enemy spawnedEnemy = new Enemy(1,screenWidth,this);
+					enemies.add(spawnedEnemy);
+				}
+				if(wave == 3 || wave == 6 || wave == 9){
+					Enemy spawnedEnemy = new Enemy(2, screenWidth/2, this);
+					enemies.add(spawnedEnemy);
+				}
 			} catch (IOException e) {}
 		}
 		player.update();
@@ -95,9 +94,10 @@ public class GamePanel extends JPanel {
 				enemies.remove(i);
 				i--;
 			}
-			
+
 		}
 		for (int i = 0; i < bullets.size(); i++) {
+			currentBullet=i;
 			bullets.get(i).update();
 			if(bullets.get(i).isAlive()){
 				bullets.get(i).draw(g2d);
@@ -106,12 +106,39 @@ public class GamePanel extends JPanel {
 				bullets.remove(i);
 				i--;
 			}
+			currentBullet = i;
 		}
 		if (enemies.size() == 0 && enemyToSpawn == 0) {
 			wave++;
-			diagonalPathSpawnX = screenWidth - 100;
 			waveSpawnTime = System.currentTimeMillis() + waveDelay;
-			enemyToSpawn = enemiesPerWave;
+			if(wave<=3) {
+				enemyToSpawn = enemiesPerWave;
+			}
+			else if(wave<=6){
+				enemyToSpawn = enemiesPerWave + 10;
+			}
+			else if(wave<=9){
+				enemyToSpawn = enemiesPerWave + 20;
+			}
+		}
+		for (int i = 0; i < bullets.size(); i++) {
+			Bullet bullet = bullets.get(i);
+			Rectangle bulletHitbox = bullet.getHitbox();
+			for (int j = 0; j < enemies.size(); j++) {
+				Enemy enemy = enemies.get(j);
+				Rectangle enemyHitbox = enemy.getHitbox();
+				if (bulletHitbox.intersects(enemyHitbox)) {
+					bullet.setAlive(false);
+					enemy.setAlive(false);
+					player.increaseScore(5);
+					enemies.remove(enemy);
+					j--;
+				}
+			}
+			if (!bullet.isAlive()) {
+				bullets.remove(bullet);
+				i--;
+			}
 		}
 		player.draw(g2d);
 	}
@@ -124,4 +151,19 @@ public class GamePanel extends JPanel {
 		return new Dimension(screenHeight - 100, screenHeight - 50);
 	}
 
+	public static ArrayList<Bullet> getBullets() {
+		return bullets;
+	}
+
+	public static ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	public int getCurrentBullet() {
+		return currentBullet;
+	}
+
+	public void setCurrentBullet(int currentBullet) {
+		this.currentBullet = currentBullet;
+	}
 }

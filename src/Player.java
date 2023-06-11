@@ -193,4 +193,8 @@ public class Player implements KeyListener {
         g2d.dispose();
         return resizedImage;
     }
+
+    public void increaseScore(int increment){
+        score += increment;
+    }
 }
