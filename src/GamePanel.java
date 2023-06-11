@@ -25,7 +25,6 @@ public class GamePanel extends JPanel {
 	private int enemyToSpawn = enemiesPerWave;
 
 	public static int screenWidth;
-	private int currentBullet;
 	private int highscore;
 	
 	public GamePanel(int width) throws IOException {
@@ -79,8 +78,10 @@ public class GamePanel extends JPanel {
 			throw new RuntimeException(e);
 		}
 		String text2 = "Highscore: " + highscore;
+		String text3 = "Power: " + player.getPower();
 		g.drawString(text, (g.getClipBounds().width - g.getFontMetrics().stringWidth(text))-10, g.getClipBounds().height - g.getFontMetrics().getHeight());
 		g.drawString(text2, (g.getClipBounds().width - g.getFontMetrics().stringWidth(text2))-10, (g.getClipBounds().height - g.getFontMetrics().getHeight())-30);
+		g.drawString(text3,(g.getClipBounds().width - g.getFontMetrics().stringWidth(text3))-10,(g.getClipBounds().height - g.getFontMetrics().getHeight())-60);
 		if (enemyToSpawn > 0 && System.currentTimeMillis() >= waveSpawnTime && System.currentTimeMillis() >= lastEnemySpawnedTime + enemySpawnDelay) {
 			lastEnemySpawnedTime = System.currentTimeMillis();
 			enemyToSpawn--;
@@ -102,7 +103,11 @@ public class GamePanel extends JPanel {
 		player.update();
 		for (int i = 0; i < enemies.size(); i++) {
 			Enemy enemy = enemies.get(i);
-			enemy.update();
+			try {
+				enemy.update();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 			if (enemy.isAlive()) {
 				enemy.draw(g2d);
 			} else {
@@ -111,16 +116,22 @@ public class GamePanel extends JPanel {
 			}
 		}
 		for (int i = 0; i < bullets.size(); i++) {
-			currentBullet=i;
 			bullets.get(i).update();
 			if(bullets.get(i).isAlive()){
-				bullets.get(i).draw(g2d);
+				if(player.getPower()<15) {
+					bullets.get(i).draw(g2d);
+				}
+				else if(player.getPower()<30){
+					bullets.get(i).draw2(g2d);
+				}
+				else{
+					bullets.get(i).draw3(g2d);
+				}
 			}
 			else{
 				bullets.remove(i);
 				i--;
 			}
-			currentBullet = i;
 		}
 		if (enemies.size() == 0 && enemyToSpawn == 0) {
 			wave++;
@@ -142,6 +153,10 @@ public class GamePanel extends JPanel {
 				Enemy enemy = enemies.get(j);
 				Rectangle enemyHitbox = enemy.getHitbox();
 				if (bulletHitbox.intersects(enemyHitbox)) {
+					int powerChance = (int) (Math.random() * 3) + 1;
+					if(powerChance == 1){
+						player.increasePower();
+					}
 					bullet.setAlive(false);
 					enemy.setAlive(false);
 					player.increaseScore(5);
@@ -171,13 +186,5 @@ public class GamePanel extends JPanel {
 
 	public static ArrayList<Enemy> getEnemies() {
 		return enemies;
-	}
-
-	public int getCurrentBullet() {
-		return currentBullet;
-	}
-
-	public void setCurrentBullet(int currentBullet) {
-		this.currentBullet = currentBullet;
 	}
 }

@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Enemy {
@@ -15,6 +16,7 @@ public class Enemy {
     private int y;
     private int path;
     private GamePanel gp;
+    private ArrayList<EnemyBullet> enemyBullets = new ArrayList<EnemyBullet>();
 
     public Enemy(int path, int x, GamePanel gp) throws IOException {
         alive = true;
@@ -28,7 +30,7 @@ public class Enemy {
         this.path = path;
     }
     
-    public void update() {
+    public void update() throws IOException {
     	if (isAlive()) {
             hitbox = new Rectangle(x,y,image.getWidth(),image.getHeight());
     		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -90,5 +92,10 @@ public class Enemy {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public void shoot() throws IOException {
+        EnemyBullet bullet = new EnemyBullet(x, y);
+        enemyBullets.add(bullet);
     }
 }

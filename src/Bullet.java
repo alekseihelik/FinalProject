@@ -44,6 +44,17 @@ public class Bullet {
     	g2d.drawImage(rotate(bulletImage,180.0), x, y, width, height, null);
     }
 
+    public void draw2(Graphics2D g2d) {
+        g2d.drawImage(rotate(bulletImage,180.0), x-10, y, width, height, null);
+        g2d.drawImage(rotate(bulletImage,180.0), x+10, y, width, height, null);
+    }
+
+    public void draw3(Graphics2D g2d) {
+        g2d.drawImage(rotate(bulletImage,180.0), x-20, y, width, height, null);
+        g2d.drawImage(rotate(bulletImage,180.0), x, y, width, height, null);
+        g2d.drawImage(rotate(bulletImage,180.0), x+20, y, width, height, null);
+    }
+
     public void update() {
     	if (alive) {
 	        y -= 10;

@@ -11,6 +11,7 @@ import java.util.TimerTask;
 public class Player implements KeyListener {
     private Rectangle hitbox;
     private final int SPEED = 5;
+    private int power;
     private boolean alive;
     private int lives;
     private int score;
@@ -214,5 +215,13 @@ public class Player implements KeyListener {
 
     public int getHighscore() {
         return highscore;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public void increasePower(){
+        power++;
     }
 }
