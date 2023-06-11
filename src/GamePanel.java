@@ -6,21 +6,24 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel {
 	private Player player;
 	public static ArrayList<Bullet> bullets = new ArrayList<>();
+	public static ArrayList<Enemy> enemies = new ArrayList<>();
 	private Image backgroundImage;
 	private int backgroundY;
+
 
 	public GamePanel() throws IOException {
 		player = new Player(this);
 		this.addKeyListener(player);
 		this.setFocusable(true);
 		backgroundY = 0;
-		backgroundImage = ImageIO.read(new File("backgrounds/top-down placeholder.jpg")); // Replace with your background image path
+		backgroundImage = ImageIO.read(new File("backgrounds/top-down placeholder.jpg"));
 	}
 
 	public void startGameLoop() {
@@ -79,4 +82,5 @@ public class GamePanel extends JPanel {
 		int screenHeight = screenSize.height;
 		return new Dimension(screenHeight - 100, screenHeight - 50);
 	}
+
 }

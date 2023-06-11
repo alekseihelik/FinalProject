@@ -86,22 +86,6 @@ public class Player implements KeyListener {
         return y;
     }
 
-    public void moveUp() {
-        y -= 100;
-    }
-
-    public void moveDown() {
-        y += 100;
-    }
-
-    public void moveLeft() {
-        x -= 100;
-    }
-
-    public void moveRight() {
-        x += 100;
-    }
-
     public void shootBullet() {
         if (alive) {
             try {

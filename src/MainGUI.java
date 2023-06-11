@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
@@ -26,8 +27,7 @@ public class MainGUI extends JFrame {
 
     private void gameIcon() {
         try {
-            URL iconUrl = new URL("https://t3.ftcdn.net/jpg/03/56/25/78/360_F_356257839_bt05Ezt9V60WnC6cSAwQqL5UJmERjJ9A.jpg");
-            BufferedImage iconImage = ImageIO.read(iconUrl);
+            BufferedImage iconImage = ImageIO.read(new File("sprites/Bullet.png"));
             setIconImage(iconImage);
         } catch (IOException e) {
             e.printStackTrace();

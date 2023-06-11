@@ -45,13 +45,10 @@ public class Bullet {
     public void draw(Graphics2D g2d) {
     	g2d.drawImage(rotate(bulletImage,180.0), x, y, width, height, null);
     }
-    public void draw2(Graphics2D g2d) {
-        g2d.drawImage(bulletImage, x, y, width, height, null);
-    }
 
     public void update() {
     	if (alive) {
-	        y -= 12;
+	        y -= 10;
 	        if (y <= -height) {
 	            alive = false;
 	        }
@@ -59,8 +56,8 @@ public class Bullet {
     }
 
     private static BufferedImage rotate(BufferedImage bimg, Double angle) {
-        double sin = Math.abs(Math.sin(Math.toRadians(angle))),
-                cos = Math.abs(Math.cos(Math.toRadians(angle)));
+        double sin = Math.abs(Math.sin(Math.toRadians(angle)));
+        double cos = Math.abs(Math.cos(Math.toRadians(angle)));
         int w = bimg.getWidth();
         int h = bimg.getHeight();
         int n = (int) Math.floor(w*cos + h*sin);
