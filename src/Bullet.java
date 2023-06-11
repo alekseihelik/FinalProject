@@ -55,6 +55,13 @@ public class Bullet {
         g2d.drawImage(rotate(bulletImage,180.0), x+20, y, width, height, null);
     }
 
+    public void draw4(Graphics2D g2d) {
+        g2d.drawImage(rotate(bulletImage,180.0), x-30, y, width, height, null);
+        g2d.drawImage(rotate(bulletImage,180.0), x-10, y, width, height, null);
+        g2d.drawImage(rotate(bulletImage,180.0), x+30, y, width, height, null);
+        g2d.drawImage(rotate(bulletImage,180.0), x+10, y, width, height, null);
+    }
+
     public void update() {
     	if (alive) {
 	        y -= 10;

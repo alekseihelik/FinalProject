@@ -5,12 +5,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Enemy {
 
     private boolean alive;
     private boolean shot;
-    private BufferedImage image;
+    private BufferedImage image1;
+    private BufferedImage image2;
+    private BufferedImage image3;
+    private BufferedImage image4;
+    private BufferedImage currentImage;
     private Rectangle hitbox;
     private int x;
     private int y;
@@ -21,18 +27,40 @@ public class Enemy {
     public Enemy(int path, int x, GamePanel gp) throws IOException {
         alive = true;
         shot = false;
-        BufferedImage originalImage = ImageIO.read(new File("sprites/EnemyPlaceholder.png"));
-        image = resizeImage(originalImage, originalImage.getWidth()/3, originalImage.getHeight()/3);
-        hitbox = new Rectangle(x,y,image.getWidth(),image.getHeight());
+        BufferedImage originalImage1 = ImageIO.read(new File("sprites/EnemyWingsUp.png"));
+        BufferedImage originalImage2 = ImageIO.read(new File("sprites/EnemyWingsFlat.png"));
+        BufferedImage originalImage3 = ImageIO.read(new File("sprites/EnemyWingsDown.png"));
+        image1 = resizeImage(originalImage1, originalImage1.getWidth()/3, originalImage1.getHeight()/3);
+        image2 = resizeImage(originalImage2, originalImage2.getWidth()/3, originalImage2.getHeight()/3);
+        image3 = resizeImage(originalImage3, originalImage3.getWidth()/3, originalImage3.getHeight()/3);
+        image4 = resizeImage(originalImage2, originalImage2.getWidth()/3, originalImage2.getHeight()/3);
+        currentImage = image1;
+        hitbox = new Rectangle(x,y,currentImage.getWidth(),currentImage.getHeight());
         y=-100;
         this.x = x;
         this.gp = gp;
         this.path = path;
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (currentImage == image1) {
+                    currentImage = image2;
+                }
+                    else if (currentImage == image2) {
+                        currentImage = image3;
+                    } else if (currentImage == image3) {
+                        currentImage = image4;
+                    } else if (currentImage == image4) {
+                        currentImage = image1;
+                    }
+                }
+        }, 0, 50);
     }
     
     public void update() throws IOException {
     	if (isAlive()) {
-            hitbox = new Rectangle(x,y,image.getWidth(),image.getHeight());
+            hitbox = new Rectangle(x,y,currentImage.getWidth(),currentImage.getHeight());
     		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     		if (path == 0) {
     			x += 4;
@@ -45,7 +73,7 @@ public class Enemy {
             else if(path == 2){
                 y += 8;
             }
-    		if (x >= gp.screenWidth + 150 || x <= image.getWidth()-200 || y>= screenSize.height+100 || !(isAlive())) {
+    		if (x >= gp.screenWidth + 150 || x <= currentImage.getWidth()-200 || y>= screenSize.height+100 || !(isAlive())) {
     			alive = false;
     		}
     	}
@@ -62,9 +90,6 @@ public class Enemy {
         return shot;
     }
 
-    public BufferedImage getImage() {
-        return image;
-    }
 
     public Rectangle getHitbox() {
         return hitbox;
@@ -79,7 +104,7 @@ public class Enemy {
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(getImage(), this.getX(), this.getY(), null);
+        g2d.drawImage(getCurrentImage(), this.getX(), this.getY(), null);
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
@@ -97,5 +122,9 @@ public class Enemy {
     public void shoot() throws IOException {
         EnemyBullet bullet = new EnemyBullet(x, y);
         enemyBullets.add(bullet);
+    }
+
+    public BufferedImage getCurrentImage() {
+        return currentImage;
     }
 }

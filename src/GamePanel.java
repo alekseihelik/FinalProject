@@ -13,6 +13,9 @@ public class GamePanel extends JPanel {
 	public static ArrayList<Bullet> bullets = new ArrayList<>();
 	public static ArrayList<Enemy> enemies = new ArrayList<>();
 	private Image backgroundImage;
+	private Image backgroundImage2;
+	private boolean finalArea;
+	private boolean finalAreaLoaded;
 	private int backgroundY;
 	private long lastEnemySpawnedTime;
 	private final long enemySpawnDelay = 500;
@@ -28,11 +31,14 @@ public class GamePanel extends JPanel {
 	private int highscore;
 	
 	public GamePanel(int width) throws IOException {
+		finalArea=false;
+		finalAreaLoaded=false;
 		player = new Player(this);
 		this.addKeyListener(player);
 		this.setFocusable(true);
 		backgroundY = 0;
-		backgroundImage = ImageIO.read(new File("backgrounds/top-down placeholder.jpg"));
+		backgroundImage = ImageIO.read(new File("backgrounds/MainArea.jpg"));
+		backgroundImage2 = ImageIO.read(new File("backgrounds/FinalArea.jpg"));
 		this.screenWidth = width;
 	}
 
@@ -48,9 +54,11 @@ public class GamePanel extends JPanel {
 					lastUpdateTime = currentTime;
 					this.repaint();
 				}
-				backgroundY += 1;
-				if (backgroundY >= getHeight()) {
-					backgroundY = 0;
+				if(!finalAreaLoaded) {
+					backgroundY += 1;
+					if (backgroundY >= getHeight()) {
+						backgroundY = 0;
+					}
 				}
 				try {
 					Thread.sleep(1);
@@ -66,8 +74,14 @@ public class GamePanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(backgroundImage, 0, backgroundY, getWidth(), getHeight(), null);
-		g2d.drawImage(backgroundImage, 0, backgroundY - getHeight(), getWidth(), getHeight(), null);
+		if (wave <= 9){
+			g2d.drawImage(backgroundImage, 0, backgroundY, getWidth(), getHeight(), null);
+		    g2d.drawImage(backgroundImage, 0, backgroundY - getHeight(), getWidth(), getHeight(), null);
+	    }
+		else if(wave>9 && !finalArea){
+			g2d.drawImage(backgroundImage2, 0, 0, getWidth(), getHeight(), null);
+			finalAreaLoaded=true;
+		}
 		g.setFont(new Font("Arial", Font.BOLD, 24));
 		g.setColor(Color.red);
 		String text = "Score: " + player.getScore();
@@ -124,8 +138,11 @@ public class GamePanel extends JPanel {
 				else if(player.getPower()<30){
 					bullets.get(i).draw2(g2d);
 				}
-				else{
+				else if(player.getPower()<45){
 					bullets.get(i).draw3(g2d);
+				}
+				else{
+					bullets.get(i).draw4(g2d);
 				}
 			}
 			else{
