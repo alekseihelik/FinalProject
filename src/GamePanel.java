@@ -1,5 +1,7 @@
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +26,7 @@ public class GamePanel extends JPanel {
 
 	public static int screenWidth;
 	private int currentBullet;
+	private int highscore;
 	
 	public GamePanel(int width) throws IOException {
 		player = new Player(this);
@@ -66,6 +69,18 @@ public class GamePanel extends JPanel {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.drawImage(backgroundImage, 0, backgroundY, getWidth(), getHeight(), null);
 		g2d.drawImage(backgroundImage, 0, backgroundY - getHeight(), getWidth(), getHeight(), null);
+		g.setFont(new Font("Arial", Font.BOLD, 24));
+		g.setColor(Color.red);
+		String text = "Score: " + player.getScore();
+		try (BufferedReader br = new BufferedReader(new FileReader("src/highscore.txt"))) {
+			String line = br.readLine();
+			highscore = Integer.parseInt(line);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		String text2 = "Highscore: " + highscore;
+		g.drawString(text, (g.getClipBounds().width - g.getFontMetrics().stringWidth(text))-10, g.getClipBounds().height - g.getFontMetrics().getHeight());
+		g.drawString(text2, (g.getClipBounds().width - g.getFontMetrics().stringWidth(text2))-10, (g.getClipBounds().height - g.getFontMetrics().getHeight())-30);
 		if (enemyToSpawn > 0 && System.currentTimeMillis() >= waveSpawnTime && System.currentTimeMillis() >= lastEnemySpawnedTime + enemySpawnDelay) {
 			lastEnemySpawnedTime = System.currentTimeMillis();
 			enemyToSpawn--;
@@ -94,7 +109,6 @@ public class GamePanel extends JPanel {
 				enemies.remove(i);
 				i--;
 			}
-
 		}
 		for (int i = 0; i < bullets.size(); i++) {
 			currentBullet=i;

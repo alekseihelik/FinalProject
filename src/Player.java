@@ -3,8 +3,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,6 +25,7 @@ public class Player implements KeyListener {
     private BufferedImage playerImage1;
     private BufferedImage playerImage2;
     private BufferedImage currentImage;
+    private int highscore;
 
     private long bulletCooldown;
     private final long bulletCooldownTime = 130;
@@ -141,46 +141,60 @@ public class Player implements KeyListener {
     }
 
     public void update() {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int dx = 0;
-        int dy = 0;
-
-        if (isMovingUp) {
-            if(y-SPEED>-10) {
-                dy -= SPEED;
+        String filePath = "src/highscore.txt";
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line = br.readLine();
+            int highscore = Integer.parseInt(line);
+            if(score>highscore){
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+                    bw.write(String.valueOf(score));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
-        if (isMovingDown) {
-            if(y+SPEED<screenSize.getHeight()-150) {
-                dy += SPEED;
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            int dx = 0;
+            int dy = 0;
+
+            if (isMovingUp) {
+                if (y - SPEED > -10) {
+                    dy -= SPEED;
+                }
             }
-        }
-        if (isMovingLeft) {
-            if(x-SPEED>-25) {
-                dx -= SPEED;
+            if (isMovingDown) {
+                if (y + SPEED < screenSize.getHeight() - 150) {
+                    dy += SPEED;
+                }
             }
-        }
-        if (isMovingRight) {
-            if(x+SPEED<screenSize.getHeight()-170) {
-                dx += SPEED;
+            if (isMovingLeft) {
+                if (x - SPEED > -25) {
+                    dx -= SPEED;
+                }
             }
+            if (isMovingRight) {
+                if (x + SPEED < screenSize.getHeight() - 170) {
+                    dx += SPEED;
+                }
+            }
+
+            if (dx != 0 && dy != 0) {
+                dx /= Math.sqrt(2);
+                dy /= Math.sqrt(2);
+            }
+
+            if (isShooting) {
+                shootBullet();
+            }
+
+            x += dx;
+            y += dy;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        if (dx != 0 && dy != 0) {
-            dx /= Math.sqrt(2);
-            dy /= Math.sqrt(2);
-        }
-
-        if (isShooting) {
-            shootBullet();
-        }
-
-        x += dx;
-        y += dy;
-
     }
 
-    public void death() {
+        public void death() {
         if (lives <= 0) {
             alive = false;
         }
@@ -196,5 +210,9 @@ public class Player implements KeyListener {
 
     public void increaseScore(int increment){
         score += increment;
+    }
+
+    public int getHighscore() {
+        return highscore;
     }
 }

@@ -5,19 +5,18 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class Bullet {
+public class EnemyBullet {
     private int x;
     private int y;
     public static final int width = 20;
     public static final int height = 60;
-    public static final int distanceToPlayer = 10;
-    
+
     private boolean alive;
     private BufferedImage bulletImage;
     private Rectangle hitbox;
 
-    public Bullet(int x, int y) throws IOException {
-        bulletImage = ImageIO.read(new File("sprites/Bullet.png"));
+    public EnemyBullet(int x, int y) throws IOException {
+        bulletImage = ImageIO.read(new File("sprites/EnemyBullet.png"));
         this.x = x;
         this.y = y;
         this.alive = true;
@@ -39,19 +38,19 @@ public class Bullet {
     public boolean isAlive() {
         return alive;
     }
-    
+
     public void draw(Graphics2D g2d) {
-    	g2d.drawImage(rotate(bulletImage,180.0), x, y, width, height, null);
+        g2d.drawImage(rotate(bulletImage,180.0), x, y, width, height, null);
     }
 
     public void update() {
-    	if (alive) {
-	        y -= 10;
+        if (alive) {
+            y += 10;
             hitbox = new Rectangle(x,y,bulletImage.getWidth(),bulletImage.getHeight());
-	        if (y <= -height) {
-	            alive = false;
-	        }
-    	}
+            if (y <= -height) {
+                alive = false;
+            }
+        }
     }
 
     private static BufferedImage rotate(BufferedImage bimg, Double angle) {
