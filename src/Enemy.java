@@ -13,15 +13,32 @@ public class Enemy {
     private Rectangle hitbox;
     private int x;
     private int y;
+    private int path;
+    private GamePanel gp;
 
-    public Enemy() throws IOException {
+    public Enemy(int path, int x, GamePanel gp) throws IOException {
         alive = true;
         shot = false;
         BufferedImage originalImage = ImageIO.read(new File("sprites/EnemyPlaceholder.png"));
         image = resizeImage(originalImage, originalImage.getWidth()/3, originalImage.getHeight()/3);
         hitbox = new Rectangle(x,y,image.getWidth(),image.getHeight());
-        x=0;
         y=-100;
+        this.x = x;
+        this.gp = gp;
+        this.path = path;
+    }
+    
+    public void update() {
+    	if (isAlive()) {
+    		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    		if (path == 0) {
+    			x += 1;
+    			y += 2;
+    		}
+    		if (x >= gp.screenWidth  || x <= image.getWidth()) {
+    			alive = false;
+    		}
+    	}
     }
 
     public boolean isAlive() {

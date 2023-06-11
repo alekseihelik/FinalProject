@@ -13,11 +13,12 @@ public class MainGUI extends JFrame {
     private Timer timer;
 
     public MainGUI() throws IOException {
+        setResizable(false);
         setScreenSize();
         gameIcon();
         setTitle("Bullet Hell");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        GamePanel backgroundPanel = new GamePanel();
+        GamePanel backgroundPanel = new GamePanel(this.getWidth());
         setContentPane(backgroundPanel);
         setVisible(true);
         backgroundPanel.startGameLoop();
@@ -45,8 +46,6 @@ public class MainGUI extends JFrame {
     private static class TimerListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // This method will be called every second
-            // You can perform any actions or updates here
         }
     }
 }
