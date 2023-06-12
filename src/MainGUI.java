@@ -47,4 +47,8 @@ public class MainGUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
         }
     }
+
+    public static void main(String[] args) throws IOException {
+        MainGUI game = new MainGUI();
+    }
 }

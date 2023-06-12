@@ -23,12 +23,13 @@ public class Enemy {
     private int path;
     private GamePanel gp;
     public static ArrayList<EnemyBullet> enemyBullets = new ArrayList<EnemyBullet>();
-    private int hitsToDie = 3;
+    private int hitsToDie;
     
     private final long SHOOT_COOLDOWN = 1000;
     private long canShootTime;
 
     public Enemy(int path, int x, GamePanel gp) throws IOException {
+        hitsToDie = 2;
         alive = true;
         shot = false;
         BufferedImage originalImage1 = ImageIO.read(new File("sprites/EnemyWingsUp.png"));
@@ -96,9 +97,6 @@ public class Enemy {
     }
 
     public boolean isAlive() {
-        if(isShot()){
-            alive = false;
-        }
         return alive;
     }
 
