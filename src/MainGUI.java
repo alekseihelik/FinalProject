@@ -38,9 +38,4 @@ public class MainGUI extends JFrame {
         setSize(screenHeight - 100, screenHeight - 50);
         setLocation((screenWidth - (screenHeight - 100)) / 2, ((screenHeight - (screenHeight - 100)) / 2) - 50);
     }
-
-
-    public static void main(String[] args) throws IOException {
-        MainGUI game = new MainGUI();
-    }
 }
