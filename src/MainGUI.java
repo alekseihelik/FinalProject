@@ -15,7 +15,7 @@ public class MainGUI extends JFrame {
         setResizable(false);
         setScreenSize();
         gameIcon();
-        setTitle("Bullet Hell");
+        setTitle("Shooting Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GamePanel backgroundPanel = new GamePanel(this.getWidth());
         setContentPane(backgroundPanel);
