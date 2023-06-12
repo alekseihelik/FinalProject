@@ -8,9 +8,9 @@ import javax.imageio.ImageIO;
 public class Bullet {
 	private int x;
 	private int y;
-	public static final int width = 20;
-	public static final int height = 60;
-	public static final int distanceToPlayer = 10;
+	public static final int WIDTH = 20;
+	public static final int HEIGHT = 60;
+	public static final int DISTANCE_TO_PLAYER = 10;
 
 	private boolean alive;
 	private BufferedImage bulletImage;
@@ -41,32 +41,32 @@ public class Bullet {
 	}
 
 	public void draw(Graphics2D g2d) {
-		g2d.drawImage(rotate(bulletImage, 180.0), x, y, width, height, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x, y, WIDTH, HEIGHT, null);
 	}
 
 	public void draw2(Graphics2D g2d) {
-		g2d.drawImage(rotate(bulletImage, 180.0), x - 10, y, width, height, null);
-		g2d.drawImage(rotate(bulletImage, 180.0), x + 10, y, width, height, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x - 10, y, WIDTH, HEIGHT, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x + 10, y, WIDTH, HEIGHT, null);
 	}
 
 	public void draw3(Graphics2D g2d) {
-		g2d.drawImage(rotate(bulletImage, 180.0), x - 20, y, width, height, null);
-		g2d.drawImage(rotate(bulletImage, 180.0), x, y, width, height, null);
-		g2d.drawImage(rotate(bulletImage, 180.0), x + 20, y, width, height, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x - 20, y, WIDTH, HEIGHT, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x, y, WIDTH, HEIGHT, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x + 20, y, WIDTH, HEIGHT, null);
 	}
 
 	public void draw4(Graphics2D g2d) {
-		g2d.drawImage(rotate(bulletImage, 180.0), x - 30, y, width, height, null);
-		g2d.drawImage(rotate(bulletImage, 180.0), x - 10, y, width, height, null);
-		g2d.drawImage(rotate(bulletImage, 180.0), x + 30, y, width, height, null);
-		g2d.drawImage(rotate(bulletImage, 180.0), x + 10, y, width, height, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x - 30, y, WIDTH, HEIGHT, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x - 10, y, WIDTH, HEIGHT, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x + 30, y, WIDTH, HEIGHT, null);
+		g2d.drawImage(rotate(bulletImage, 180.0), x + 10, y, WIDTH, HEIGHT, null);
 	}
 
 	public void update() {
 		if (alive) {
 			y -= 10;
 			hitbox = new Rectangle(x, y, bulletImage.getWidth(), bulletImage.getHeight());
-			if (y <= -height) {
+			if (y <= -HEIGHT) {
 				alive = false;
 			}
 		}

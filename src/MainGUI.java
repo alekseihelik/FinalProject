@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 public class MainGUI extends JFrame {
-    private Player player;
     private Timer timer;
 
     public MainGUI() throws IOException {

@@ -25,7 +25,7 @@ public class Enemy {
     public static ArrayList<EnemyBullet> enemyBullets = new ArrayList<EnemyBullet>();
     private int hitsToDie = 3;
     
-    private final long shootCooldown = 1000;
+    private final long SHOOT_COOLDOWN = 1000;
     private long canShootTime;
 
     public Enemy(int path, int x, GamePanel gp) throws IOException {
@@ -137,7 +137,7 @@ public class Enemy {
 
     public void shoot() throws IOException {
     	if (System.currentTimeMillis() >= canShootTime) {
-    		canShootTime = System.currentTimeMillis() + shootCooldown;
+    		canShootTime = System.currentTimeMillis() + SHOOT_COOLDOWN;
 	        EnemyBullet bullet = new EnemyBullet(x, y);
 	        enemyBullets.add(bullet);
     	}

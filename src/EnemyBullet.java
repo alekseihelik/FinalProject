@@ -8,8 +8,8 @@ import javax.imageio.ImageIO;
 public class EnemyBullet {
     private int x;
     private int y;
-    public static final int width = 20;
-    public static final int height = 60;
+    public static final int WIDTH = 20;
+    public static final int HEIGHT = 60;
 
     private boolean alive;
     private BufferedImage bulletImage;
@@ -40,14 +40,14 @@ public class EnemyBullet {
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(bulletImage, x, y, width, height, null);
+        g2d.drawImage(bulletImage, x, y, WIDTH, HEIGHT, null);
     }
 
     public void update() {
         if (alive) {
            y += 10;
             hitbox = new Rectangle(x,y,bulletImage.getWidth(),bulletImage.getHeight());
-            if (y <= -height) {
+            if (y <= -HEIGHT) {
                 alive = false;
             }
         }

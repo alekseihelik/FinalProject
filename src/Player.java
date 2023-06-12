@@ -103,7 +103,7 @@ public class Player implements KeyListener {
             try {
                 if (new Date().getTime() > bulletCooldown) {
                     bulletCooldown = new Date().getTime() + bulletCooldownTime;
-                    Bullet bullet = new Bullet(x + playerImage1.getWidth()/2 - Bullet.width/2, y - Bullet.height - Bullet.distanceToPlayer+50);
+                    Bullet bullet = new Bullet(x + playerImage1.getWidth()/2 - Bullet.WIDTH/2, y - Bullet.HEIGHT - Bullet.DISTANCE_TO_PLAYER+50);
                     GamePanel.bullets.add(bullet);
                 }
             } catch (IOException e) {}

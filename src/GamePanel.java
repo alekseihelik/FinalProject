@@ -18,10 +18,10 @@ public class GamePanel extends JPanel {
 	private boolean finalAreaLoaded;
 	private int backgroundY;
 	private long lastEnemySpawnedTime;
-	private final long enemySpawnDelay = 500;
+	private final long ENEMY_SPAWN_DELAY = 500;
 	
 	private int wave = 1;
-	private final long waveDelay = 500;
+	private final long WAVE_DELAY = 500;
 	private long waveSpawnTime;
 	
 	private int enemiesPerWave = 10;
@@ -98,7 +98,7 @@ public class GamePanel extends JPanel {
 		g.drawString(text2, (g.getClipBounds().width - g.getFontMetrics().stringWidth(text2))-10, (g.getClipBounds().height - g.getFontMetrics().getHeight())-30);
 		g.drawString(text3,(g.getClipBounds().width - g.getFontMetrics().stringWidth(text3))-10,(g.getClipBounds().height - g.getFontMetrics().getHeight())-60);
 		g.drawString(text4,(g.getClipBounds().width - g.getFontMetrics().stringWidth(text4))-10,(g.getClipBounds().height - g.getFontMetrics().getHeight())-90);
-		if (enemyToSpawn > 0 && System.currentTimeMillis() >= waveSpawnTime && System.currentTimeMillis() >= lastEnemySpawnedTime + enemySpawnDelay) {
+		if (enemyToSpawn > 0 && System.currentTimeMillis() >= waveSpawnTime && System.currentTimeMillis() >= lastEnemySpawnedTime + ENEMY_SPAWN_DELAY) {
 			lastEnemySpawnedTime = System.currentTimeMillis();
 			enemyToSpawn--;
 			try {
@@ -154,7 +154,7 @@ public class GamePanel extends JPanel {
 		}
 		if (enemies.size() == 0 && enemyToSpawn == 0) {
 			wave++;
-			waveSpawnTime = System.currentTimeMillis() + waveDelay;
+			waveSpawnTime = System.currentTimeMillis() + WAVE_DELAY;
 			if(wave<=3) {
 				enemyToSpawn = enemiesPerWave;
 			}
