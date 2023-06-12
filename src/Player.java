@@ -1,4 +1,8 @@
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -12,9 +16,10 @@ public class Player implements KeyListener {
     private Rectangle hitbox;
     private final int SPEED = 5;
     private int power;
-    private boolean alive;
     private int lives;
     private int score;
+    private final int COOLDOWN = 130;
+    private boolean cooldownActive;
     private int x;
     private int y;
     private GamePanel gamePanel;
@@ -23,6 +28,7 @@ public class Player implements KeyListener {
     private boolean isMovingLeft;
     private boolean isMovingRight;
     private boolean isShooting;
+    private static final float VOLUME = -20.0f;
     private BufferedImage playerImage1;
     private BufferedImage playerImage2;
     private BufferedImage currentImage;
@@ -33,6 +39,7 @@ public class Player implements KeyListener {
 
     public Player(GamePanel panel) throws IOException {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        cooldownActive = false;
         BufferedImage originalImage1 = ImageIO.read(new File("sprites/Player1.png"));
         BufferedImage originalImage2 = ImageIO.read(new File("sprites/Player2.png"));
         int scaledWidth = originalImage1.getWidth() / 3;
@@ -44,7 +51,6 @@ public class Player implements KeyListener {
         score = 0;
         x = (int) (screenSize.getHeight() - 180) / 2;
         y = 600;
-        alive = true;
         lives = 3;
         this.gamePanel = panel;
         isMovingUp = false;
@@ -75,10 +81,6 @@ public class Player implements KeyListener {
         return score;
     }
 
-    public boolean isAlive() {
-        return alive;
-    }
-
     public int getX() {
         return x;
     }
@@ -88,7 +90,7 @@ public class Player implements KeyListener {
     }
 
     public void shootBullet() {
-        if (alive) {
+        if (lives>0) {
             try {
                 if (new Date().getTime() > bulletCooldown) {
                     bulletCooldown = new Date().getTime() + bulletCooldownTime;
@@ -142,64 +144,74 @@ public class Player implements KeyListener {
     }
 
     public void update() {
-        String filePath = "src/highscore.txt";
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line = br.readLine();
-            int highscore = Integer.parseInt(line);
-            if(score>highscore){
-                try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
-                    bw.write(String.valueOf(score));
-                } catch (IOException e) {
-                    e.printStackTrace();
+        if(lives>0) {
+            String filePath = "src/highscore.txt";
+            try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+                String line = br.readLine();
+                int highscore = Integer.parseInt(line);
+                if (score > highscore) {
+                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+                        bw.write(String.valueOf(score));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            int dx = 0;
-            int dy = 0;
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                int dx = 0;
+                int dy = 0;
 
-            if (isMovingUp) {
-                if (y - SPEED > -10) {
-                    dy -= SPEED;
+                if (isMovingUp) {
+                    if (y - SPEED > -10) {
+                        dy -= SPEED;
+                    }
                 }
-            }
-            if (isMovingDown) {
-                if (y + SPEED < screenSize.getHeight() - 150) {
-                    dy += SPEED;
+                if (isMovingDown) {
+                    if (y + SPEED < screenSize.getHeight() - 150) {
+                        dy += SPEED;
+                    }
                 }
-            }
-            if (isMovingLeft) {
-                if (x - SPEED > -25) {
-                    dx -= SPEED;
+                if (isMovingLeft) {
+                    if (x - SPEED > -25) {
+                        dx -= SPEED;
+                    }
                 }
-            }
-            if (isMovingRight) {
-                if (x + SPEED < screenSize.getHeight() - 170) {
-                    dx += SPEED;
+                if (isMovingRight) {
+                    if (x + SPEED < screenSize.getHeight() - 170) {
+                        dx += SPEED;
+                    }
                 }
+
+                if (dx != 0 && dy != 0) {
+                    dx /= Math.sqrt(2);
+                    dy /= Math.sqrt(2);
+                }
+
+                if (isShooting) {
+                    shootBullet();
+                    if(!cooldownActive) {
+                        try {
+                            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("sound effects/ShotSoundEffect.wav"));
+                            Clip clip = AudioSystem.getClip();
+                            clip.open(audioInputStream);
+                            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                            gainControl.setValue(VOLUME);
+                            clip.start();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        startCooldown();
+                    }
+                }
+
+                x += dx;
+                y += dy;
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
-            if (dx != 0 && dy != 0) {
-                dx /= Math.sqrt(2);
-                dy /= Math.sqrt(2);
-            }
-
-            if (isShooting) {
-                shootBullet();
-            }
-
-            x += dx;
-            y += dy;
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
-        public void death() {
-        if (lives <= 0) {
-            alive = false;
-        }
-    }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
         BufferedImage resizedImage = new BufferedImage(width, height, originalImage.getType());
@@ -223,5 +235,17 @@ public class Player implements KeyListener {
 
     public void increasePower(){
         power++;
+    }
+
+    private void startCooldown() {
+        cooldownActive = true;
+        Timer cooldownTimer = new Timer();
+        cooldownTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                cooldownActive = false;
+                cooldownTimer.cancel();
+            }
+        }, COOLDOWN);
     }
 }

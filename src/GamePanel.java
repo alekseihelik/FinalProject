@@ -93,9 +93,11 @@ public class GamePanel extends JPanel {
 		}
 		String text2 = "Highscore: " + highscore;
 		String text3 = "Power: " + player.getPower();
+		String text4 = "Lives: " + player.getLives();
 		g.drawString(text, (g.getClipBounds().width - g.getFontMetrics().stringWidth(text))-10, g.getClipBounds().height - g.getFontMetrics().getHeight());
 		g.drawString(text2, (g.getClipBounds().width - g.getFontMetrics().stringWidth(text2))-10, (g.getClipBounds().height - g.getFontMetrics().getHeight())-30);
 		g.drawString(text3,(g.getClipBounds().width - g.getFontMetrics().stringWidth(text3))-10,(g.getClipBounds().height - g.getFontMetrics().getHeight())-60);
+		g.drawString(text4,(g.getClipBounds().width - g.getFontMetrics().stringWidth(text4))-10,(g.getClipBounds().height - g.getFontMetrics().getHeight())-90);
 		if (enemyToSpawn > 0 && System.currentTimeMillis() >= waveSpawnTime && System.currentTimeMillis() >= lastEnemySpawnedTime + enemySpawnDelay) {
 			lastEnemySpawnedTime = System.currentTimeMillis();
 			enemyToSpawn--;
