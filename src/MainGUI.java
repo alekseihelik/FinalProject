@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 public class MainGUI extends JFrame {
-    private Timer timer;
 
     public MainGUI() throws IOException {
         setResizable(false);
@@ -21,8 +20,6 @@ public class MainGUI extends JFrame {
         setContentPane(backgroundPanel);
         setVisible(true);
         backgroundPanel.startGameLoop();
-        timer = new Timer(1000, new TimerListener());
-        timer.start();
     }
 
     private void gameIcon() {
@@ -42,11 +39,6 @@ public class MainGUI extends JFrame {
         setLocation((screenWidth - (screenHeight - 100)) / 2, ((screenHeight - (screenHeight - 100)) / 2) - 50);
     }
 
-    private static class TimerListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        }
-    }
 
     public static void main(String[] args) throws IOException {
         MainGUI game = new MainGUI();
