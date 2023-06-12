@@ -172,19 +172,48 @@ public class GamePanel extends JPanel {
 				Enemy enemy = enemies.get(j);
 				Rectangle enemyHitbox = enemy.getHitbox();
 				if (bulletHitbox.intersects(enemyHitbox)) {
-					int powerChance = (int) (Math.random() * 3) + 1;
-					if(powerChance == 1){
-						player.increasePower();
+					if (enemy.getHitsToDie() > 1) {
+						enemy.decrementHit();
+					} else {
+						int powerChance = (int) (Math.random() * 3) + 1;
+						if(powerChance == 1){
+							player.increasePower();
+						}
+						enemy.setAlive(false);
+						player.increaseScore(5);
+						enemies.remove(j);
+						j--;
 					}
 					bullet.setAlive(false);
-					enemy.setAlive(false);
-					player.increaseScore(5);
-					enemies.remove(enemy);
-					j--;
+					break;
 				}
 			}
 			if (!bullet.isAlive()) {
-				bullets.remove(bullet);
+				bullets.remove(i);
+				i--;
+			}
+		}
+		for (int i = 0; i < Enemy.enemyBullets.size(); i++) {
+			EnemyBullet bullet = Enemy.enemyBullets.get(i);
+			Rectangle bulletHitbox = bullet.getHitbox();
+			bullet.update();
+			if (bullet.isAlive()) {
+				bullet.draw(g2d);
+				if (bulletHitbox.intersects(player.getHitbox())) {
+					if (player.getLives() > 1) {
+						player.decrementLives();
+					} else {
+						player.die();
+					}
+					bullet.setAlive(false);
+					break;
+				}
+				if (!bullet.isAlive()) {
+					Enemy.enemyBullets.remove(i);
+					i--;
+				}
+			} else {
+				Enemy.enemyBullets.remove(i);
 				i--;
 			}
 		}

@@ -33,6 +33,7 @@ public class Player implements KeyListener {
     private BufferedImage playerImage2;
     private BufferedImage currentImage;
     private int highscore;
+    
 
     private long bulletCooldown;
     private final long bulletCooldownTime = 130;
@@ -89,6 +90,14 @@ public class Player implements KeyListener {
         return y;
     }
 
+    public void decrementLives() {
+    	lives--;
+    }
+    
+    public void die() {
+
+    }
+    
     public void shootBullet() {
         if (lives>0) {
             try {
@@ -205,6 +214,8 @@ public class Player implements KeyListener {
 
                 x += dx;
                 y += dy;
+                
+                hitbox = new Rectangle(x, y, currentImage.getWidth(), currentImage.getHeight());
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -221,6 +232,10 @@ public class Player implements KeyListener {
         return resizedImage;
     }
 
+    public Rectangle getHitbox() {
+    	return hitbox;
+    }
+    
     public void increaseScore(int increment){
         score += increment;
     }

@@ -22,7 +22,11 @@ public class Enemy {
     private int y;
     private int path;
     private GamePanel gp;
-    private ArrayList<EnemyBullet> enemyBullets = new ArrayList<EnemyBullet>();
+    public static ArrayList<EnemyBullet> enemyBullets = new ArrayList<EnemyBullet>();
+    private int hitsToDie = 3;
+    
+    private final long shootCooldown = 1000;
+    private long canShootTime;
 
     public Enemy(int path, int x, GamePanel gp) throws IOException {
         alive = true;
@@ -58,8 +62,19 @@ public class Enemy {
         }, 0, 50);
     }
     
+    public int getHitsToDie() {
+    	return hitsToDie;
+    }
+    
+    public void decrementHit() {
+    	hitsToDie--;
+    }
+    
+
+    
     public void update() throws IOException {
     	if (isAlive()) {
+    		shoot();
             hitbox = new Rectangle(x,y,currentImage.getWidth(),currentImage.getHeight());
     		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     		if (path == 0) {
@@ -76,6 +91,7 @@ public class Enemy {
     		if (x >= gp.screenWidth + 150 || x <= currentImage.getWidth()-200 || y>= screenSize.height+100 || !(isAlive())) {
     			alive = false;
     		}
+    		
     	}
     }
 
@@ -120,9 +136,13 @@ public class Enemy {
     }
 
     public void shoot() throws IOException {
-        EnemyBullet bullet = new EnemyBullet(x, y);
-        enemyBullets.add(bullet);
+    	if (System.currentTimeMillis() >= canShootTime) {
+    		canShootTime = System.currentTimeMillis() + shootCooldown;
+	        EnemyBullet bullet = new EnemyBullet(x, y);
+	        enemyBullets.add(bullet);
+    	}
     }
+    
 
     public BufferedImage getCurrentImage() {
         return currentImage;

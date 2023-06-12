@@ -16,7 +16,7 @@ public class EnemyBullet {
     private Rectangle hitbox;
 
     public EnemyBullet(int x, int y) throws IOException {
-        bulletImage = ImageIO.read(new File("sprites/EnemyBullet.png"));
+        bulletImage = ImageIO.read(new File("sprites/Bullet.png"));
         this.x = x;
         this.y = y;
         this.alive = true;
@@ -40,12 +40,12 @@ public class EnemyBullet {
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(rotate(bulletImage,180.0), x, y, width, height, null);
+        g2d.drawImage(bulletImage, x, y, width, height, null);
     }
 
     public void update() {
         if (alive) {
-            y += 10;
+           y += 10;
             hitbox = new Rectangle(x,y,bulletImage.getWidth(),bulletImage.getHeight());
             if (y <= -height) {
                 alive = false;
